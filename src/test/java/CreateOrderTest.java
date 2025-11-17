@@ -5,7 +5,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import static org.hamcrest.Matchers.notNullValue;
+
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.isA;
+
 
 public class CreateOrderTest {
 
@@ -33,9 +36,10 @@ public class CreateOrderTest {
                          String[] colors) {
         Order order = new Order(firstName, lastName, address, metroStation, phone, rentTime,deliveryDate, comment, colors);
         Response response = orderClient.createOrder(order);
-        track = response.path("track");
         response.then()
                 .statusCode(201)
-                .body("track", notNullValue());
+                .body("track", isA(Integer.class))
+                .body("track", greaterThan(0));
+        track = response.path("track");
     }
 }
